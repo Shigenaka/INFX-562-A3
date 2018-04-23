@@ -132,4 +132,5 @@ out_data <- all_data %>%
   mutate(team = ifelse(team == "tex", "Texas Rangers", as.character(team))) %>%
   mutate(team = ifelse(team == "tor", "Toronto Blue Jays", as.character(team)))
 
-unique(out_data$events)
+#unique(out_data$events)
+write.csv(out_data, "./data/prepped/prepped_data.csv")

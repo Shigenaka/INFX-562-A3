@@ -1,6 +1,8 @@
 setwd("/Users/MasonShigenaka/Desktop/INFX 562/INFX-562-A3")
 path <- "./data/raw/"
 
+library(dplyr)
+
 all_data <- data.frame()
 
 file_names <- dir(path, pattern=".csv")
@@ -130,7 +132,15 @@ out_data <- all_data %>%
   mutate(team = ifelse(team == "sea", "Seattle Mariners", as.character(team))) %>%
   mutate(team = ifelse(team == "tb.", "Tampa Bay Rays", as.character(team))) %>%
   mutate(team = ifelse(team == "tex", "Texas Rangers", as.character(team))) %>%
-  mutate(team = ifelse(team == "tor", "Toronto Blue Jays", as.character(team)))
+  mutate(team = ifelse(team == "tor", "Toronto Blue Jays", as.character(team))) %>%
+  mutate(count = paste0(balls, "-", strikes)) %>%
+  mutate(pitch_supertype = ifelse(pitch_name == "Knuckle Curve","Curveball",
+                                  as.character(pitch_name))) %>%
+  mutate(pitch_supertype = ifelse(pitch_name == "4-Seam Fastball" |
+                                    pitch_name == "2-Seam Fastball" |
+                                    pitch_name == "Split Finger" |
+                                    pitch_name == "Sinker",
+                                  "Fastball", as.character(pitch_name)))
 
 #unique(out_data$events)
 write.csv(out_data, "./data/prepped/prepped_data.csv")

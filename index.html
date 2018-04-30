@@ -12,6 +12,7 @@
 .node text {
   pointer-events: none;
   text-shadow: 0 1px 0 #fff;
+  font-family: Verdana, Arial, sans-serif !important;
 }
 
 .link {
@@ -32,6 +33,13 @@
 <script>
 	
 var units = "Pitches";
+
+var colors = {
+    'Fastball' :    '#e41a1c',
+    'Changeup' :    '#377eb8',
+    'Curveball' :   '#4daf4a',
+
+}
 
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 10, bottom: 10, left: 10},

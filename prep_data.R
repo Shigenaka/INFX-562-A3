@@ -67,7 +67,7 @@ out_data <- all_data %>%
   mutate(events = ifelse((events=="field_out" & bb_type == "popup"), 
                          "Popup", 
                          as.character(events))) %>%
-  mutate(events = ifelse(events == "sac_fly", "Sacrifice",
+  mutate(events = ifelse(events == "sac_fly", "Fly Out",
                          as.character(events))) %>%
   mutate(events = ifelse(events == "double", "Double",
                          as.character(events))) %>%
@@ -150,7 +150,10 @@ out_data <- out_data %>%
                          "Pickoff",
                          "Other",
                          "Caught Stealing",
-                         "Hit by Pitch"))) %>%
+                         "Hit by Pitch",
+                         "Sacrifice",
+                         "Error",
+                         "Fielder's Choice"))) %>%
   filter(!(pitch_supertype %in% c("Eephus",
                                   "Screwball",
                                   "Knuckle Ball",

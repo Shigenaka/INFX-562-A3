@@ -67,7 +67,7 @@ out_data <- all_data %>%
   mutate(events = ifelse((events=="field_out" & bb_type == "popup"), 
                          "Popup", 
                          as.character(events))) %>%
-  mutate(events = ifelse(events == "sac_fly", "Sacrifice Fly",
+  mutate(events = ifelse(events == "sac_fly", "Sacrifice",
                          as.character(events))) %>%
   mutate(events = ifelse(events == "double", "Double",
                          as.character(events))) %>%
@@ -82,7 +82,7 @@ out_data <- all_data %>%
                            events == "strikeout_double_play" |
                            events == "sac_fly_double_play",
                          "Double Play", as.character(events))) %>%
-  mutate(events = ifelse(events == "force_out", "Force Out",
+  mutate(events = ifelse(events == "force_out", "Fielder's Choice",
                          as.character(events))) %>%
   mutate(events = ifelse(events == "hit_by_pitch", "Hit by Pitch",
                          as.character(events))) %>%
@@ -95,7 +95,7 @@ out_data <- all_data %>%
                          as.character(events))) %>%
   mutate(events = ifelse(events == "intent_walk", "Intentional Walk",
                          as.character(events))) %>%
-  mutate(events = ifelse(events == "sac_bunt", "Sacrifice Bunt",
+  mutate(events = ifelse(events == "sac_bunt", "Sacrifice",
                          as.character(events))) %>%
   mutate(events = ifelse(events == "triple", "Triple",
                          as.character(events))) %>%
@@ -154,7 +154,8 @@ out_data <- out_data %>%
                                   "Screwball",
                                   "Knuckle Ball",
                                   "Unknown",
-                                  "Automatic Ball"))) 
+                                  "Automatic Ball"))) %>%
+  filter(count != "4-2")
 
 first_half <- out_data %>%
   mutate(source = count,
@@ -176,5 +177,5 @@ second_half$target_type <- "Outcome"
 
 out_data_grouped <- rbind(first_half, second_half)
 
-write.csv(out_data, "./data/prepped/prepped_data.csv", row.names = F)
+#write.csv(out_data, "./data/prepped/prepped_data.csv", row.names = F)
 write.csv(out_data_grouped, "./data/prepped/prepped_data_grouped.csv", row.names = F)

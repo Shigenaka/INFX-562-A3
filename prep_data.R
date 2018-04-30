@@ -139,19 +139,22 @@ out_data <- all_data %>%
 
 out_data <- out_data %>%
   mutate(pitch_supertype = ifelse(pitch_name == "4-Seam Fastball" |
-                                    pitch_name == "2-Seam Fastball" |
-                                    pitch_name == "Split Finger" |
-                                    pitch_name == "Sinker",
+                                    pitch_name == "2-Seam Fastball",
                                   "Fastball", as.character(pitch_supertype))) %>%
   mutate(pitch_supertype = ifelse(pitch_name == "Curveball" |
                                     pitch_name == "Knuckle Curve",
-                                  "Fastball", as.character(pitch_supertype))) %>%
+                                  "Curveball", as.character(pitch_supertype))) %>%
   filter(pitch_supertype != "") %>%
   filter(!(events %in% c("Intentional Walk", 
                          "Catcher's Interference",
                          "Pickoff",
                          "Other",
-                         "Caught Stealing")))
+                         "Caught Stealing"))) %>%
+  filter(!(pitch_supertype %in% c("Eephus",
+                                  "Screwball",
+                                  "Knuckle Ball",
+                                  "Unknown",
+                                  "Automatic Ball"))) 
 
 first_half <- out_data %>%
   mutate(source = count,

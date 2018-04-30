@@ -135,12 +135,43 @@ out_data <- all_data %>%
   mutate(team = ifelse(team == "tor", "Toronto Blue Jays", as.character(team))) %>%
   mutate(count = paste0(balls, "-", strikes)) %>%
   mutate(pitch_supertype = ifelse(pitch_name == "Knuckle Curve","Curveball",
-                                  as.character(pitch_name))) %>%
+                                  as.character(pitch_name)))
+
+out_data <- out_data %>%
   mutate(pitch_supertype = ifelse(pitch_name == "4-Seam Fastball" |
                                     pitch_name == "2-Seam Fastball" |
                                     pitch_name == "Split Finger" |
                                     pitch_name == "Sinker",
-                                  "Fastball", as.character(pitch_name)))
+                                  "Fastball", as.character(pitch_supertype))) %>%
+  mutate(pitch_supertype = ifelse(pitch_name == "Curveball" |
+                                    pitch_name == "Knuckle Curve",
+                                  "Fastball", as.character(pitch_supertype))) %>%
+  filter(pitch_supertype != "") %>%
+  filter(!(events %in% c("Intentional Walk", 
+                         "Catcher's Interference",
+                         "Pickoff",
+                         "Other",
+                         "Caught Stealing")))
 
-#unique(out_data$events)
-write.csv(out_data, "./data/prepped/prepped_data.csv")
+first_half <- out_data %>%
+  mutate(source = count,
+         target = pitch_supertype) %>%
+  group_by(source, target) %>%
+  summarise(freq = n())
+
+second_half <- out_data %>%
+  mutate(source = pitch_supertype,
+         target = events) %>%
+  group_by(source, target) %>%
+  summarise(freq = n())
+
+first_half$source_type <- "Count"
+first_half$target_type <- "Pitch"
+
+second_half$source_type <- "Pitch"
+second_half$target_type <- "Outcome"
+
+out_data_grouped <- rbind(first_half, second_half)
+
+write.csv(out_data, "./data/prepped/prepped_data.csv", row.names = F)
+write.csv(out_data_grouped, "./data/prepped/prepped_data_grouped.csv", row.names = F)

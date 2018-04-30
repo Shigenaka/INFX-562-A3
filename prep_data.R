@@ -81,7 +81,7 @@ out_data <- all_data %>%
                            events == "double_play" |
                            events == "strikeout_double_play" |
                            events == "sac_fly_double_play",
-                         "Double Play", as.character(events))) %>%
+                         "Double/Triple Play", as.character(events))) %>%
   mutate(events = ifelse(events == "force_out", "Fielder's Choice",
                          as.character(events))) %>%
   mutate(events = ifelse(events == "hit_by_pitch", "Hit by Pitch",
@@ -109,7 +109,7 @@ out_data <- all_data %>%
                            events == "pickoff_1b" |
                            events == "pickoff_caught_stealing_3b",
                          "Pickoff", as.character(events))) %>%
-  mutate(events = ifelse(events == "triple_play", "Triple Play",
+  mutate(events = ifelse(events == "triple_play", "Double/Triple Play",
                          as.character(events))) %>%
   mutate(events = ifelse(events == "catcher_interf", "Catcher's Interference",
                          as.character(events))) %>%
@@ -149,7 +149,8 @@ out_data <- out_data %>%
                          "Catcher's Interference",
                          "Pickoff",
                          "Other",
-                         "Caught Stealing"))) %>%
+                         "Caught Stealing",
+                         "Hit by Pitch"))) %>%
   filter(!(pitch_supertype %in% c("Eephus",
                                   "Screwball",
                                   "Knuckle Ball",

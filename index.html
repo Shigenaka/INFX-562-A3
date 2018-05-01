@@ -24,11 +24,25 @@
   stroke-opacity: .9;
 }
 
+.table {
+    padding-top: 8px;
+    float: right;
+}
+
+.dataText {
+    float: left;
+    font-family: Verdana, Arial, sans-serif !important;
+}
+
 </style>
 <body>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="sankey.js"></script>
+
+<div class="table">
+</div>
+
 <script>
 	
 var units = "Pitches";
@@ -58,9 +72,12 @@ var sankey = d3.sankey()
 
 var path = sankey.link();
 
+var div = d3.select(".table").append("div")	
+    .attr("class", "dataText");
+
 // load the data
 d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
-  console.log(data)
+  //console.log(data)
 
   //set up graph in same style as original example but empty
   graph = {"nodes" : [], "links" : []};
@@ -71,7 +88,8 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
     graph.links.push({ "source": d.source,
                        "target": d.target,
                        "value": +d.freq,
-                       "pitch": d.pitch });
+                       "pitch": d.pitch,
+                       "selected" : 0 });
    });
 
   // return only the distinct / unique nodes
@@ -107,19 +125,28 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
       })
       .on('mouseover', function(d) {
             d3.select(this).moveToFront();
-            console.log(d);
+            div.transition()
+               .duration(200)
+            div.html(d.source.name + ' ' + d.target.name + "<br>" + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' Pitches')
+            //console.log(d);
+      })
+      .on('mouseout', function(d) {
+            div.transition()
+               .duration(200)
+            div.html('')
+            //console.log(d);
       })
       .style("stroke-width", function(d) {
-          console.log(d)
-          return Math.max(1, d.dy); 
+          //console.log(d)
+          return Math.max(1, d.dy);
       })
       .sort(function(a, b) { return b.dy - a.dy; });
 
   // add the link titles
-  link.append("title")
-        .text(function(d) {
-    		return d.source.name + " - " + 
-                d.target.name + "\n" + format(d.value); });
+//   link.append("title")
+//         .text(function(d) {
+//     		return d.source.name + " - " + 
+//                 d.target.name + "\n" + format(d.value); });
 
   // add in the nodes
   var node = svg.append("g").selectAll(".node")
@@ -180,15 +207,16 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
     link.attr("d", path);
   }
 
-  function highlightLinks(d) {
-      console.log(d);
-  }
+//   function highlightLinks(d) {
+//       console.log(d);
+//   }
 
   d3.selection.prototype.moveToFront = function() {  
       return this.each(function(){
         this.parentNode.appendChild(this);
       });
   };
+
 });
 
 </script>

@@ -135,15 +135,12 @@ out_data <- all_data %>%
   mutate(team = ifelse(team == "tor", "Toronto Blue Jays", as.character(team))) %>%
   mutate(count = paste0(balls, "-", strikes)) %>%
   mutate(pitch_supertype = ifelse(pitch_name == "Knuckle Curve","Curveball",
-                                  as.character(pitch_name)))
+                                  as.character(pitch_name))) %>%
+  mutate(pitch_supertype = ifelse(pitch_name == "Sinker",
+                                  "2-Seam Fastball",
+                                  as.character(pitch_supertype)))
 
 out_data <- out_data %>%
-  mutate(pitch_supertype = ifelse(pitch_name == "4-Seam Fastball" |
-                                    pitch_name == "2-Seam Fastball",
-                                  "Fastball", as.character(pitch_supertype))) %>%
-  mutate(pitch_supertype = ifelse(pitch_name == "Curveball" |
-                                    pitch_name == "Knuckle Curve",
-                                  "Curveball", as.character(pitch_supertype))) %>%
   filter(pitch_supertype != "") %>%
   filter(!(events %in% c("Intentional Walk", 
                          "Catcher's Interference",
@@ -179,7 +176,8 @@ first_half$target_type <- "Pitch"
 second_half$source_type <- "Pitch"
 second_half$target_type <- "Outcome"
 
-out_data_grouped <- rbind(first_half, second_half)
+out_data_grouped <- rbind(first_half, second_half) %>%
+  mutate(pitch = ifelse(source_type == "Pitch", source, target))
 
 #write.csv(out_data, "./data/prepped/prepped_data.csv", row.names = F)
 write.csv(out_data_grouped, "./data/prepped/prepped_data_grouped.csv", row.names = F)

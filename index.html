@@ -25,16 +25,30 @@
 }
 
 .table {
-    padding-top: 8px;
     float: right;
     font-family: Verdana, Arial, sans-serif !important;
-    font-size: 16px;
+    font-size: 12px;
+}
+
+table {
+    padding-top: 8px;
+    border: solid thin; 
+    border-collapse: collapse; 
+}
+
+td, th {
+    border: solid thin;
+    padding: 0.25rem 0.5rem;
 }
 
 .table div {
     padding-top: 8px;
     float: left;
     font-family: Verdana, Arial, sans-serif !important;
+}
+
+.noData {
+    display: none;
 }
 
 </style>
@@ -172,7 +186,7 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
         })
         .on("drag", dragmove))
         .on("mouseover", function(d) {
-            console.log(d);
+            //console.log(d);
             highlightLinks(d);
         })
         .on("mouseout", unHighlightLinks);
@@ -262,21 +276,54 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
   }
 
   function appendToTable(link) {
-      var div = d3.select(".table").append("p")
+      var dataTable = d3.select(".table");
+
+      if(dataTable.classed("noData")) {
+          dataTable.classed("noData", false);
+      }
+
+      var tr = d3.select(".table").append("tr")
                   .attr("class", "classLink" + link.id);
-        div.html(link.source.name + ' - ' + link.target.name + ": " + link.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' Pitches' + '<br>' + ' (' + ((link.value / link.source.value)*100).toFixed(2) + '% of '+ link.source.name + 's, ' + ((link.value / link.target.value)*100).toFixed(2) + '% of '+ link.target.name + 's)')
+      var rowData = [link.source.name + ' - ' + link.target.name,
+                     link.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                     ((link.value / link.source.value)*100).toFixed(2),// + '% of '+ link.source.name + 's',
+                     ((link.value / link.target.value)*100).toFixed(2)// + '% of '+ link.target.name + 's'
+                    ]
+      rowData.forEach(function(d) {
+          tr.append("td")
+            .text(d)
+      })
+        //div.html(link.source.name + ' - ' + link.target.name + ": " + link.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' Pitches' + '<br>' + ' (' + ((link.value / link.source.value)*100).toFixed(2) + '% of '+ link.source.name + 's, ' + ((link.value / link.target.value)*100).toFixed(2) + '% of '+ link.target.name + 's)')
       //console.log("classLink" + link.id);
   }
 
   function removeFromTable(link) {
       var divId = "classLink" + link.id
       d3.select(".table").select("."+divId).remove()
+
+      var dataTable = d3.select(".table").selectAll("td");
+      if(dataTable._groups[0].length == 0) {
+          d3.select(".table").classed("noData", true);
+      }
   }
 
 });
 
-var divTable = d3.select("body").append("div")
-            .attr("class", "table");
+// var divTable = d3.select("body").append("div")
+//             .attr("class", "table");
+
+var colHeads = ['Link Name (Source - Target)', '# of Pitches', '% of Source', '% of Target']
+
+var divTable = d3.select("body").append("table")
+            .attr("class", "table noData");
+var thead = divTable.append('thead');
+var tbody = divTable.append('tbody');
+
+thead.append('tr')
+     .selectAll('th')
+     .data(colHeads).enter()
+     .append('th')
+        .text(function(colHeads) { return colHeads; });
 
 </script>
 

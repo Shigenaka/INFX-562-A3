@@ -161,7 +161,7 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
     .enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { 
-		  return "translate(" + d.x + "," + d.y + ")"; })
+          return "translate(" + d.x + "," + d.y + ")"; })
       .call(d3.drag()
         .subject(function(d) {
           return d;
@@ -171,6 +171,7 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
         })
         .on("drag", dragmove))
         .on("mouseover", function(d) {
+            console.log(d);
             highlightLinks(d);
         })
         .on("mouseout", unHighlightLinks);

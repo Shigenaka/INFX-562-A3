@@ -15,15 +15,6 @@
   font-family: Verdana, Arial, sans-serif !important;
 }
 
-.link {
-  fill: none;
-  stroke-opacity: .3;
-}
-
-.link:hover {
-  stroke-opacity: .9;
-}
-
 .table {
     padding-top: 8px;
     float: right;
@@ -189,7 +180,7 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
 		  return d3.rgb(d.color).darker(2); })
     .append("title")
       .text(function(d) { 
-		  return d.name + "\n" + format(d.value); });
+		  return d.name + "\n" + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' Pitches'; });
 
   // add in the title for the nodes
   node.append("text")

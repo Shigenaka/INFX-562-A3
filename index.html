@@ -120,17 +120,24 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
     .enter().append("path")
       .attr("class", "link")
       .attr("d", path)
+      .attr("id", function(d,i){
+        d.id = i;
+        return "link-"+i;
+      })
       .attr("stroke", function(d) {
           return d.color = color(d.pitch.replace(/ .*/, ""));
       })
       .on('mouseover', function(d) {
-            d3.select(this).moveToFront();
+            d3.select(this).moveToFront()
+              .style("stroke-opacity", 0.9);
             div.transition()
                .duration(200)
             div.html(d.source.name + ' ' + d.target.name + "<br>" + d.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' Pitches')
             //console.log(d);
       })
       .on('mouseout', function(d) {
+            d3.select(this)
+              .style("stroke-opacity", 0.3);
             div.transition()
                .duration(200)
             div.html('')
@@ -162,7 +169,9 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
         .on("start", function() {
           this.parentNode.appendChild(this);
         })
-        .on("drag", dragmove));
+        .on("drag", dragmove))
+        .on("mouseover", highlightLinks)
+        .on("mouseout", unHighlightLinks);
 
   // add the rectangles for the nodes
   node.append("rect")
@@ -216,6 +225,37 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
         this.parentNode.appendChild(this);
       });
   };
+
+  function highlightLinks(node) {
+    //console.log(node);
+    d3.selectAll(".link")
+      .style("stroke-opacity", 0.1)
+    var traverse = [{
+                      linkType : "sourceLinks",
+                      nodeType : "target"
+                    },{
+                      linkType : "targetLinks",
+                      nodeType : "source"
+                    }];
+    traverse.forEach(function(step){
+        node[step.linkType].forEach(function(link) {
+            //console.log(link);
+            highlight_link(link.id, 0.9);
+        });
+    });
+  }
+
+  function unHighlightLinks(node) {
+    //console.log(node);
+    d3.selectAll(".link")
+      .style("stroke-opacity", 0.3)
+  }
+
+  function highlight_link(id,opacity){
+      //console.log(id);
+      d3.select("#link-"+id).moveToFront();
+      d3.select("#link-"+id).style("stroke-opacity", opacity);
+  }
 
 });
 

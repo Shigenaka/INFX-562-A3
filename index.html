@@ -3,6 +3,12 @@
 <title>2017 AL At Bat Flow</title>
 <style>
 
+.vis {
+    float: left;
+}
+
+
+
 .node rect {
   cursor: move;
   fill-opacity: .9;
@@ -24,10 +30,14 @@
   stroke-opacity: .3;
 }
 
-.table {
+.table1 {
     float: right;
     font-family: Verdana, Arial, sans-serif !important;
     font-size: 12px;
+}
+
+.explanation {
+    float: left;
 }
 
 table {
@@ -54,6 +64,18 @@ td, th {
 
 </style>
 <body>
+    <div class="vis"></div>
+    <div>
+            <div class="table1"></div>
+            <div class="explanation">
+                <p>
+                    Throughout an at-bat, the umpire will track how many balls (pitches outside of the strike zone) and strikes (pitches)
+                    swung at by the hitter or pitches in the zone. A question I always ask is: what is the pitcher going to throw next,
+                    based on the current count? This visualization looks at data about pitch type based on count from the American League 
+                    in 2017 and then track what proportions of each outcome, each pitch is responsible for (on the right side).
+                </p>
+            </div>
+    </div>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="sankey.js"></script>
@@ -73,7 +95,7 @@ var format = function(d) { return d + " " + units; },
     color = d3.scaleOrdinal(d3.schemeCategory10);
 
 // append the svg object to the body of the page
-var svg = d3.select("body").append("svg")
+var svg = d3.select("body").select(".vis").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -311,7 +333,7 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
 
 var colHeads = ['Link Name (Source - Target)', '# of Pitches', '% of Source', '% of Target']
 
-var divTable = d3.select("body").append("table")
+var divTable = d3.select("body").select(".table1").append("table")
             .attr("class", "table noData");
 var thead = divTable.append('thead');
 var tbody = divTable.append('tbody');
@@ -323,14 +345,5 @@ thead.append('tr')
         .text(function(colHeads) { return colHeads; });
 
 </script>
-
-<div class="explanation">
-        <p>
-            Throughout an at-bat, the umpire will track how many balls (pitches outside of the strike zone) and strikes (pitches)
-            swung at by the hitter or pitches in the zone. A question I always ask is: what is the pitcher going to throw next,
-            based on the current count? This visualization looks at data about pitch type based on count from the American League 
-            in 2017 and then track what proportions of each outcome, each pitch is responsible for (on the right side).
-        </p>
-</div>
 
 </body>

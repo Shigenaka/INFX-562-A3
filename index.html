@@ -170,6 +170,7 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
             d3.select(this)
               .style("stroke-opacity", 0.3);
             //console.log(d);
+            d3.selectAll(".selectedLink").moveToFront();
       })
       .on("click", function(d) {
             var thisLink = d3.select(this);

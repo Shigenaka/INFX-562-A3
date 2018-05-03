@@ -293,8 +293,6 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
           tr.append("td")
             .text(d)
       })
-        //div.html(link.source.name + ' - ' + link.target.name + ": " + link.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' Pitches' + '<br>' + ' (' + ((link.value / link.source.value)*100).toFixed(2) + '% of '+ link.source.name + 's, ' + ((link.value / link.target.value)*100).toFixed(2) + '% of '+ link.target.name + 's)')
-      //console.log("classLink" + link.id);
   }
 
   function removeFromTable(link) {
@@ -308,9 +306,6 @@ d3.csv("data/prepped/prepped_data_grouped.csv", function(error, data) {
   }
 
 });
-
-// var divTable = d3.select("body").append("div")
-//             .attr("class", "table");
 
 var colHeads = ['Link Name (Source - Target)', '# of Pitches', '% of Source', '% of Target']
 
